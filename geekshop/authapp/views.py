@@ -57,7 +57,7 @@ def register(request):
             user = register_form.save()
             if send_verify_mail(user):
                 print('сообщение подтверждения отправлено')
-                return HttpResponseRedirect(reverse('main'))
+                return HttpResponseRedirect(reverse('auth:send_invite', kwargs={'email': user.email}))
             else:
                 print('ошибка отправки сообщения')
                 return HttpResponseRedirect(reverse('auth:login'))
@@ -92,3 +92,6 @@ def verify(request, email, activation_key):
     except Exception as e:
         print(f'error activation user : {e.args}')
         return HttpResponseRedirect(reverse('main'))
+
+def send_invite(request, email):
+    return render(request, 'authapp/send_invite.html', {'email': email})

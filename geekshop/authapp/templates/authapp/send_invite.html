@@ -1,0 +1,16 @@
+{% extends 'authapp/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+  <h3>Поздравляем!</h3>
+  <br>
+  <h4>Регистрация почти завершена.</h4>
+  <h4>На почту {{ email }} отпралено письмо с инструкциями по завершению регистрации.</h4>
+  <h4>Проверьте свой почтовый ящик</h4>
+  <br>
+  <button class="btn btn-round form-control">
+    <a href="{% url 'main' %}" class="">на главную</a>
+  </button>
+
+{% endblock %}
