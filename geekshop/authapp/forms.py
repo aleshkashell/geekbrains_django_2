@@ -1,8 +1,12 @@
+import random
+import hashlib
+import re
+
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django import forms
-import re
+
 from .models import ShopUser
 
 
@@ -40,6 +44,17 @@ class ShopUserRegisterForm(UserCreationForm):
         if not match:
             raise forms.ValidationError("Некорректный email адрес")
         return data
+
+    def save(self):
+        user = super().save()
+
+        user.is_active = False
+        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha1((user.email + salt).encode('utf8')).hexdigest()
+        user.save()
+
+        return user
+
 
 
 class ShopUserEditForm(UserChangeForm):

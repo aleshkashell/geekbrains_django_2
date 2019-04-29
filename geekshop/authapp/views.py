@@ -4,6 +4,8 @@ from authapp.forms import ShopUserRegisterForm
 from authapp.forms import ShopUserEditForm
 from django.contrib import auth
 from django.urls import reverse
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 def login(request):
@@ -51,9 +53,29 @@ def register(request):
         register_form = ShopUserRegisterForm(request.POST, request.FILES)
 
         if register_form.is_valid():
-            register_form.save()
-            return HttpResponseRedirect(reverse('auth:login'))
+            user = register_form.save()
+            if send_verify_mail(user):
+                print('сообщение подтверждения отправлено')
+                return HttpResponseRedirect(reverse('main'))
+            else:
+                print('ошибка отправки сообщения')
+                return HttpResponseRedirect(reverse('auth:login'))
     else:
         register_form = ShopUserRegisterForm()
     content = {'title': title, 'register_form': register_form}
     return render(request, 'authapp/register.html', content)
+
+def send_verify_mail(user):
+    verify_link = reverse('auth:verify', kwargs={
+        'email': user.email,
+        'activation_key': user.activation_key
+    })
+
+    title = f'Подтверждение учетной записи {user.username}'
+
+    message = f'Для подтверждения учетной записи {user.username} на портале {settings.DOMAIN_NAME} перейдите по ссылке: \n{settings.DOMAIN_NAME}{verify_link}'
+
+    return send_mail(title, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+
+def verify(request):
+    pass
