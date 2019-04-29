@@ -6,6 +6,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
+from .models import ShopUser
 
 
 def login(request):
@@ -77,5 +78,17 @@ def send_verify_mail(user):
 
     return send_mail(title, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
 
-def verify(request):
-    pass
+def verify(request, email, activation_key):
+    try:
+        user = ShopUser.objects.get(email=email)
+        if user.activation_key == activation_key and not user.is_activation_key_expired():
+            user.is_active = True
+            user.save()
+            auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return render(request, 'authapp/verification.html')
+        else:
+            print(f'error activation user: {user}')
+            return render(request, 'authapp/verification.html')
+    except Exception as e:
+        print(f'error activation user : {e.args}')
+        return HttpResponseRedirect(reverse('main'))
