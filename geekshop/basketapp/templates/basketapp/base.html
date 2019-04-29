@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+            {{ title|title }}
+        {% endblock %}
+    </title>
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% endblock %}
+
+    {% block js %}
+        <script src="{% static 'js/jquery-3.4.0.min.js' %}"></script>
+        <script src="{% static 'js/basket_scripts.js' %}"></script>
+    {% endblock %}
+</head>
+<body>
+    <div class="container">
+        {% block menu %}
+        {% include 'mainapp/includes/inc_menu.html' %}
+        {% endblock %}
+        <div class="basket_container">        
+            <div class="h2 text-center head">
+            Ваша корзина, 
+            {% if user.first_name %}
+                {{ user.first_name|title}}
+            {% else %}
+                Пользователь
+            {% endif %}
+            </div>
+                    
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

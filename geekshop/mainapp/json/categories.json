@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Процессоры",
+        "description": "",
+        "image": "0513732_2.jpg"
+    },
+    {
+        "name": "Материнские платы",
+        "description": "",
+        "image": "asus-rog-strix-b250g-gaming.jpg"
+    },
+    {
+        "name": "Серверные платформы",
+        "description": "",
+        "image": "0535934_1.jpg"
+    },
+    {
+        "name": "Видеокарты",
+        "description": "",
+        "image": "308715.png"
+    }
+]

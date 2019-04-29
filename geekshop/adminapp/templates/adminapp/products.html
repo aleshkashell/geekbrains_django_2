@@ -1,0 +1,67 @@
+{% extends 'adminapp/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+  <div class="products_list">
+    <button class="new_product">
+      <a href={% url 'admin_custom:product_create' category.pk %}>
+        новый продукт
+      </a>
+    </button>
+        {{ category.name }}
+    
+    <div class="row mt-5">
+    {% for object in object_list %}
+    
+      <div class="card mx-2 mb-3" style="max-width: 540px">
+        <div class="row no-gutters">
+          <div class="col-md-4 ">
+            <img src="/media/{{object.image|default:'products_images/default.jpg'}}" class="card-img" alt="{{ object.name }}">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ object.name|title }}</h5>
+              <p class="card-text">{{ object.short_desc|title }}</p>
+              {% comment %} <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> {% endcomment %}
+              <a class="btn btn-primary" href="{% url 'admin_custom:product_update' object.pk %}" role="button">Редактировать</a>
+              <a class="btn btn-primary" href="{% url 'admin_custom:product_delete' object.pk %}" role="button">Удалить</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %} <div class="product_record">
+        <img 
+          src="/media/{{object.image|default:'products_images/default.jpg'}}"
+          alt="{{ object.name }}"
+          width="100 px">
+        <div class="product_name">
+          {{ object.name|title }}
+        </div>
+        <div class="product_actions">
+          <button>
+            <a href={% url 'admin_custom:product_update' object.pk %}>
+              редактировать
+            </a>
+          </button>
+          <button>
+            <a href={% url 'admin_custom:product_delete' object.pk %}>
+              удалить
+            </a>
+          </button>
+        </div>
+        <div class="summary">
+          <b>цена</b>
+          <p>{{ object.price }} руб</p>
+          <b>количество</b>
+          <p>{{ object.quantity }}</p>
+        </div>
+        <div class="product_desc">
+          {{ object.short_desc|title }}
+        </div>
+        <br>
+      </div> {% endcomment %}
+    {% endfor%}
+    </div>
+  </div>
+{% endblock %}

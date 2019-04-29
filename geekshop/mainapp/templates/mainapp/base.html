@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+            {{ title|title }}
+        {% endblock %}
+    </title>
+    {% block css %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% endblock %}
+
+    {% block js %}
+    {% endblock %}
+</head>
+<body>
+    <div class="container">
+        {% block menu %}
+        {% include 'mainapp/includes/inc_menu.html' %}
+        {% endblock %}
+        {% block content %}
+        {% endblock %}
+
+        {% block footer %}
+        <div class="footer">
+            <footer class="footer-copyright">&copy; Все права защищены</footer>
+        </div>
+        {% endblock %}
+    </div>
+</body>
+</html>
