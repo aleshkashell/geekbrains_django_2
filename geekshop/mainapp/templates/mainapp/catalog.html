@@ -11,7 +11,7 @@
     {% for category in categories %}
         <div class="block">
             <a href="{% url 'products:category' category.id %}"><img src="/media/{{ category.image }}" alt="{{ category.name }}" width="100"></a>
-            <a href="{% url 'products:category' category.id %}" class="caption">подробнее</a>
+            <a href="{% url 'products:category' category.id %}" class="caption">{{ category.name }}</a>
         </div>
     {% endfor %}
 </div>
