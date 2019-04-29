@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from .models import ProductCategory, Product
 from django.shortcuts import get_object_or_404
-from basketapp.models import Basket
 import random
 
 
@@ -10,24 +9,6 @@ main_links_menu = [
         {'href': 'products:index', 'name': 'Продукты'},
         {'href': 'contact', 'name': 'Контакты'}
     ]
-
-
-def get_basket_sum(request):
-    basket = []
-    if request.user.is_authenticated:
-        basket = request.user.basket.all()
-    total = 0
-    for product in basket:
-        position = get_object_or_404(Product, pk=product.pk)
-        total = total + position.price * product.quantity
-    return total
-
-
-def get_basket(user):
-    if user.is_authenticated:
-        return Basket.objects.filter(user=user)
-    else:
-        return []
 
 
 def get_hot_product():
@@ -43,13 +24,9 @@ def get_same_products(hot_product):
 
 def main(request):
     title = 'Главная'
-    basket = []
-    if request.user.is_authenticated:
-        basket = request.user.basket.all()
     content = {
             'title': title,
-            'links_menu': main_links_menu,
-            'basket': basket            
+            'links_menu': main_links_menu,          
         }
     return render(request, 'mainapp/index.html', content)
 
@@ -57,9 +34,6 @@ def main(request):
 def products(request, pk=None):
     title = 'Категории'
     categories = ProductCategory.objects.all()
-    basket = []
-    if request.user.is_authenticated:
-        basket = request.user.basket.all()
     hot_product = get_hot_product()
     same_products = get_same_products(hot_product)
     if pk is not None:
@@ -75,7 +49,6 @@ def products(request, pk=None):
             'category': category,
             'products': products,
             'categories': categories,
-            'basket': basket,
             'same_products': same_products,
             'hot_product': hot_product,
         }
@@ -85,7 +58,6 @@ def products(request, pk=None):
         'links_menu': main_links_menu, 
         'same_products': same_products,
         'categories': categories,
-        'basket': basket,
         'same_products': same_products,
         'hot_product': hot_product,
     }
@@ -95,13 +67,9 @@ def products(request, pk=None):
 
 def contact(request):
     title = 'Контакты'
-    basket = []
-    if request.user.is_authenticated:
-        basket = request.user.basket.all()
     content = {
             'title': title,
             'links_menu': main_links_menu,
-            'basket': basket
         }
     return render(request, 'mainapp/contacts.html', content)
 
@@ -112,7 +80,6 @@ def product(request, pk):
         'links_menu': main_links_menu,
         'product_links_menu': ProductCategory.objects.all(), 
         'product': get_object_or_404(Product, pk=pk), 
-        'basket': get_basket(request.user),
     }
     
     return render(request, 'mainapp/product.html', content)
