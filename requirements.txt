@@ -4,3 +4,4 @@ ipython
 django-debug-toolbar
 social-auth-app-django
 flake8
+requests
