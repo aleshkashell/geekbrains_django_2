@@ -43,5 +43,23 @@
         "description": "PCI-E 3.0, ядро - 1400 МГц, Boost - 1750 МГц, память - 16 Гб HBM2 2000 МГц, 4096 бит, HDMI, 3xDisplayPort, Retail",
         "price": "56110.00",
         "quantity": 9
+    },
+    {
+        "category":"Материнские платы",
+        "name": "Материнская плата Gigabyte GA-AB350M-DS3H V2",
+        "image": "306306.png",
+        "short_desc": "Socket AM4, AMD B350, 4xDDR-4, 7.1CH, 1000 Мбит/с, USB3.1, DVI, HDMI, mATX, Retail",
+        "description": "Socket AM4, AMD B350, 4xDDR-4, 7.1CH, 1000 Мбит/с, USB3.1, DVI, HDMI, mATX, Retail",
+        "price": "4050.00",
+        "quantity": 10
+    },
+    {
+        "category":"Материнские платы",
+        "name": "Материнская плата ASRock B360 Pro4",
+        "image": "283100.jpg",
+        "short_desc": "Socket 1151 v2, Intel B360, 4xDDR-4, 7.1CH, 1000 Мбит/с, USB3.1, USB 3.1 Type-C, D-Sub, DVI, HDMI, ATX, Retail",
+        "description": "Socket 1151 v2, Intel B360, 4xDDR-4, 7.1CH, 1000 Мбит/с, USB3.1, USB 3.1 Type-C, D-Sub, DVI, HDMI, ATX, Retail",
+        "price": "6080.00",
+        "quantity": 10
     }
 ]
