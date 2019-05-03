@@ -6,3 +6,4 @@ migrations/
 tmp/
 geekshop/conf/
 db.sqlite3
+users_avatars/
