@@ -25,8 +25,8 @@ class ShopUserProfile(models.Model):
     FEMALE = 'W'
 
     GENDER_CHOICES = (
-        (MALE, 'М'),
-        (FEMALE, 'Ж'),
+        (MALE, 'Мужской'),
+        (FEMALE, 'Женский'),
     )
 
     user = models.OneToOneField(ShopUser, primary_key=True, on_delete=models.CASCADE)
@@ -38,7 +38,5 @@ class ShopUserProfile(models.Model):
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
             ShopUserProfile.objects.create(user=instance)
-
-    @receiver(post_save, sender=ShopUser)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.shopuserprofile.save()
+        else:
+            instance.shopuserprofile.save()
