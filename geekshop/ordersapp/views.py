@@ -29,12 +29,12 @@ class OrderItemsCreate(CreateView):
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
 
         if self.request.POST:
-            formset = OrderFormSet(self.request.POST)
+            formset = OrderFormSet(self.request.POST, self.request.FILES)
         else:
-            basket_items = Basket.get_items(self.request.user)
+            #basket_items = Basket.get_items(self.request.user)
+            basket_items = self.request.user.basket.all()
             if len(basket_items):
-                OrderFormSet = inlineformset_factory(Order, OrderItem, \
-                                    form=OrderItemForm, extra=len(basket_items))
+                OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=len(basket_items))
                 formset = OrderFormSet()
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
