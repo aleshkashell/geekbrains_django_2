@@ -1,4 +1,5 @@
 from django import template
+from django.conf import settings
 
 register = template.Library()
 
@@ -16,3 +17,8 @@ def total_quantity(user):
         return 0
     else:
         return user.basket.all()[0].total_quantity
+
+
+@register.filter(name='media_folder_products')
+def media_folder_products(image):
+    return settings.MEDIA_URL + str(image)
