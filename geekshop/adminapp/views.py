@@ -282,8 +282,6 @@ class OrderDeleteView(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         order = get_object_or_404(Order, pk=kwargs['pk'])
-        print('status')
-        print(order.status)
         order.status = Order.CANCEL
         order.save()
         return HttpResponseRedirect(self.success_url)   
