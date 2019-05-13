@@ -5,6 +5,7 @@ from authapp.models import ShopUser
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect
 from django.urls import reverse_lazy
 from mainapp.models import Product, ProductCategory
+from ordersapp.models import Order
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -233,3 +234,56 @@ class UserDeleteView(DeleteView):
         user.is_active = False
         user.save()
         return HttpResponseRedirect(self.success_url)    
+
+
+class OrderListView(ListView):
+    model = Order
+    template_name = 'adminapp/orders.html'
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Заказы'
+        return context
+
+
+class OrderUpdateView(UpdateView):
+    model = Order
+    template_name = 'adminapp/order_update.html'
+    fields = '__all__'
+    success_url = reverse_lazy('adminapp:orders')
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Заказы'
+        context['title_submenu'] = 'Обновление заказа'
+        return context
+
+
+class OrderDeleteView(DeleteView):
+    model = Order
+    template_name = 'adminapp/order_update.html'
+    success_url = reverse_lazy('adminapp:orders')
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Заказы'
+        context['title_submenu'] = 'Удаление заказа №{number}'.format(number=kwargs['object'].pk)
+        return context
+
+    def delete(self, request, *args, **kwargs):
+        order = get_object_or_404(Order, pk=kwargs['pk'])
+        print('status')
+        print(order.status)
+        order.status = Order.CANCEL
+        order.save()
+        return HttpResponseRedirect(self.success_url)   

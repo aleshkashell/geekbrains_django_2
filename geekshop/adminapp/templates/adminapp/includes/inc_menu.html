@@ -31,4 +31,12 @@
       Товары
     </a>
   </li>
+  <li>
+    <a href="{% url 'admin_custom:orders' %}"
+      class="{% if request.resolver_match.url_name == 'orders' %}
+                active
+              {% endif %}">
+      Заказы
+    </a>
+  </li>
 </ul>
