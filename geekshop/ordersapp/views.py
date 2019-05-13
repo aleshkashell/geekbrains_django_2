@@ -66,12 +66,13 @@ class OrderItemsCreate(CreateView):
 
 class OrderItemsUpdate(UpdateView):
     model = Order
+    fields = []
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
     
     def get_context_data(self, **kwargs):
-        data = super(OrderItemsCreate, self).get_context_data(**kwargs)
+        data = super(OrderItemsUpdate, self).get_context_data(**kwargs)
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
 
         if self.request.POST:
