@@ -70,6 +70,7 @@ class OrderItemsCreate(CreateView):
 class OrderItemsUpdate(UpdateView):
     model = Order
     fields = []
+    success_url = reverse_lazy('ordersapp:orders_list')
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
@@ -131,11 +132,12 @@ def order_forming_complete(request, pk):
 @receiver(pre_save, sender=OrderItem)
 @receiver(pre_save, sender=Basket)
 def product_quantity_update_save(sender, update_fields, instance, **kwargs):
-    if instance.pk:
-        instance.product.quantity -= instance.quantity - sender.get_item(instance.pk).quantity
-    else:
-        instance.product.quantity -= instance.quantity
-    instance.product.save()
+    if update_fields is 'quantity' or 'product':
+        if instance.pk:
+            instance.product.quantity -= instance.quantity - sender.get_item(instance.pk).quantity
+        else:
+            instance.product.quantity -= instance.quantity
+        instance.product.save()
 
 
 @receiver(pre_delete, sender=OrderItem)
