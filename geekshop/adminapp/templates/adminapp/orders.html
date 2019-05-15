@@ -1,0 +1,64 @@
+{% extends 'adminapp/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+  <div class="categories_list">
+    <button class="new_category">
+      <a href={% url 'admin_custom:category_create' %}>
+        новая категория
+      </a>
+    </button>
+    <div class="row mt-5"> 
+    {% for object in object_list %}
+
+      <div class="card mx-2 mb-3 {% if object.status == 'CNC' or object.status == 'RDY' %} bg-light text-muted {% endif %}" style="min-width: 540px">
+        <div class="row no-gutters">
+          {% comment %} <div class="col-md-4 ">
+            <img src="/media/{{object.image|default:'products_images/default.jpg'}}" class="card-img" alt="{{ object.name }}">
+          </div> {% endcomment %}
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Заказ №{{ object.pk|title }}</h5>
+              <p class="card-text">Создан: {{ object.created|date:"Y-m-d H:i:s" }}</p>
+              <p class="card-text">Обновлен: {{ object.updated|date:"Y-m-d H:i:s" }}</p>
+              <p class="card-text">Статус: {{ object.get_status_display }}</p>
+              {% comment %} <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> {% endcomment %}
+              <a class="btn btn-primary" href="{% url 'admin_custom:order_update' object.pk %}" role="button">Редактировать</a>
+              {% if object.status != 'CNC' %}
+              <a class="btn btn-primary" href="{% url 'admin_custom:order_delete' object.pk %}" role="button">Отменить</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      {% comment %} <div class="category_record">
+        <div class="category_name">
+          {{ object.name|title }}
+        </div>
+        <div class="category_actions">
+          <button>
+            <a href={% url 'admin_custom:products' object.pk %}>
+              товары категории
+            </a>
+          </button>
+          <button>
+            <a href={% url 'admin_custom:category_update' object.pk %}>
+              редактировать
+            </a>
+          </button>
+          <button>
+            <a href={% url 'admin_custom:category_delete' object.pk %}>
+              удалить
+            </a>
+          </button>
+        </div>
+        <div class="category_desc">
+          {{ object.description|title }}
+        </div>
+      </div> {% endcomment %}
+    {% endfor%}
+    </div>
+  </div>
+{% endblock %}

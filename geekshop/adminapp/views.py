@@ -4,11 +4,16 @@ from django.shortcuts import render
 from authapp.models import ShopUser
 from django.shortcuts import get_object_or_404, render, HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.db import transaction
 from mainapp.models import Product, ProductCategory
+from ordersapp.models import Order, OrderItem
+from basketapp.models import Basket
+from ordersapp.forms import OrderItemForm
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
+from django.forms import inlineformset_factory
 
 
 class ProductCategoryListView(ListView):
@@ -233,3 +238,82 @@ class UserDeleteView(DeleteView):
         user.is_active = False
         user.save()
         return HttpResponseRedirect(self.success_url)    
+
+
+class OrderListView(ListView):
+    model = Order
+    template_name = 'adminapp/orders.html'
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Заказы'
+        return context
+
+
+class OrderUpdateView(UpdateView):
+    model = Order
+    template_name = 'adminapp/order_update.html'
+    fields = '__all__'
+    success_url = reverse_lazy('adminapp:orders')
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+#    def get_context_data(self, **kwargs):
+#        context = super().get_context_data(**kwargs)
+#        context['title'] = 'Заказы'
+#        context['title_submenu'] = 'Обновление заказа'
+#        return context
+    
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
+        data['title'] = 'Заказы'
+        data['title_submenu'] = 'Обновление заказа'
+        if self.request.POST:
+            data['orderitems'] = OrderFormSet(self.request.POST, instance=self.object)
+        else:
+            data['orderitems'] = OrderFormSet(instance=self.object)
+
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        orderitems = context['orderitems']
+
+        with transaction.atomic():
+            self.object = form.save()
+            if orderitems.is_valid():
+                orderitems.instance = self.object
+                orderitems.save()
+
+        # удаляем пустой заказ
+        if self.object.get_total_cost() == 0:
+            self.object.delete()
+
+        return super().form_valid(form)
+
+
+class OrderDeleteView(DeleteView):
+    model = Order
+    template_name = 'adminapp/order_update.html'
+    success_url = reverse_lazy('adminapp:orders')
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Заказы'
+        context['title_submenu'] = 'Удаление заказа №{number}'.format(number=kwargs['object'].pk)
+        return context
+
+    def delete(self, request, *args, **kwargs):
+        order = get_object_or_404(Order, pk=kwargs['pk'])
+        order.status = Order.CANCEL
+        order.save()
+        return HttpResponseRedirect(self.success_url)   

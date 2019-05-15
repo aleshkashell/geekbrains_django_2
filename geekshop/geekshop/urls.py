@@ -20,8 +20,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include
 
-if settings.DEBUG:
-    import debug_toolbar
+#if settings.DEBUG:
+#    import debug_toolbar
 
 
 urlpatterns = [
@@ -33,8 +33,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('admin_custom/', include('adminapp.urls', namespace='admin_custom')),
     path('social/', include('social_django.urls', namespace='social')),
+    path('order', include('ordersapp.urls', namespace='order')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns.append(path('__debug__/', include(debug_toolbar.urls)))
+#    urlpatterns.append(path('__debug__/', include(debug_toolbar.urls)))
