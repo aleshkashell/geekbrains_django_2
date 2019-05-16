@@ -8,6 +8,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, pre_delete
+from django.http import JsonResponse
 
 from basketapp.models import Basket
 from ordersapp.models import Order, OrderItem
@@ -127,6 +128,10 @@ def order_forming_complete(request, pk):
     order.status = Order.SENT_TO_PROCEED
     order.save()
     return HttpResponseRedirect(reverse('ordersapp:orders_list'))
+
+
+def product_price(request, pk):
+    return JsonResponse({'result': 1000})
 
 
 @receiver(pre_save, sender=OrderItem)
