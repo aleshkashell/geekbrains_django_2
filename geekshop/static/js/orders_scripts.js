@@ -7,31 +7,38 @@ window.onload = function () {
 
     var order_total_quantity = parseInt($('.order_total_quantity').text()) || 0;
     var order_total_cost = parseFloat($('.order_total_cost').text().replace(',', '.')) || 0;
-
-    for (var i = 0; i < TOTAL_FORMS; i++) {
-        _quantity = parseInt($('input[name="orderitems-' + i + '-quantity"]').val());
-        _price = parseFloat($('.orderitems-' + i + '-price').text().replace(',', '.'));
-        quantity_arr[i] = _quantity;
-        if (_price) {
-            price_arr[i] = _price;
-        } else {
-            price_arr[i] = 0;
-        }
-    }
-
-    if (!order_total_quantity) {
+    updateData();
+    function updateData(){
+        TOTAL_FORMS = parseInt($('input[name="orderitems-TOTAL_FORMS"]').val());
+        console.log("Total: ", TOTAL_FORMS);
         for (var i = 0; i < TOTAL_FORMS; i++) {
-            order_total_quantity += quantity_arr[i];
-            order_total_cost += quantity_arr[i] * price_arr[i];
+            _quantity = parseInt($('input[name="orderitems-' + i + '-quantity"]').val());
+            _price = parseFloat($('.orderitems-' + i + '-price').text().replace(',', '.'));
+            quantity_arr[i] = _quantity;
+            if (_price) {
+                price_arr[i] = _price;
+            } else {
+                price_arr[i] = 0;
+            }
+            console.log(i, _quantity, _price);
         }
-        $('.order_total_quantity').html(order_total_quantity.toString());
-        $('.order_total_cost').html(Number(order_total_cost.toFixed(2)).toString());
-    }
-
-
+        
+        if (!order_total_quantity) {
+            for (var i = 0; i < TOTAL_FORMS; i++) {
+                order_total_quantity += quantity_arr[i];
+                order_total_cost += quantity_arr[i] * price_arr[i];
+            }
+            $('.order_total_quantity').html(order_total_quantity.toString());
+            $('.order_total_cost').html(Number(order_total_cost.toFixed(2)).toString());
+        }
+        console.log(quantity_arr);
+        console.log(price_arr);
+    };
+    
     $('.order_form').on('click', 'input[type="number"]', function (event) {
         var target = event.target;
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-quantity', ''));
+        console.log(price_arr);
         if (price_arr[orderitem_num]) {
             orderitem_quantity = parseInt(target.value);
             delta_quantity = orderitem_quantity - quantity_arr[orderitem_num];
@@ -77,16 +84,23 @@ window.onload = function () {
 
     $('.order_form').on('change', 'select', function(event){
         var target = event.target;
-        console.log(target);
+        orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-product', ''));
+        console.log(event);
+        if(target.value == ""){
+            foundElement = target.parentElement.parentElement.getElementsByClassName("td3");
+            foundElement[0].innerHTML = "";
+        };
         $.ajax({
             url: "/order/price/" + target.value + "/",
                 
             success: function (data) {
-                foundElement = target.parentElement.parentElement.getElementsByClassName("td3");
-                foundElement[0].innerHTML = "<span class=\"orderitems-0-price\">" + data.result + "</span> руб";
-                console.log(target.parentElement.parentElement);
-                console.log(foundElement);
+                priceField = target.parentElement.parentElement.getElementsByClassName("td3");
+                priceField[0].innerHTML = '<span class="orderitems-' + orderitem_num + '-price">' + data.result + '</span> руб';
+                quantityField = target.parentElement.parentElement.getElementsByClassName("td2");
+                quantityField[0].innerHTML = '<input type="number" name="orderitems-' + orderitem_num + '-quantity" value="0" min="0" class="form-control" id="id_orderitems-' + orderitem_num + '-quantity">';
+                updateData();
             },
         });
+        updateData();
     });
 }
