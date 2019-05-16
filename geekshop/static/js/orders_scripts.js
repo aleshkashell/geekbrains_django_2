@@ -78,5 +78,15 @@ window.onload = function () {
     $('.order_form').on('change', 'select', function(event){
         var target = event.target;
         console.log(target);
+        $.ajax({
+            url: "/order/price/" + target.value + "/",
+                
+            success: function (data) {
+                foundElement = target.parentElement.parentElement.getElementsByClassName("td3");
+                foundElement[0].innerHTML = "<span class=\"orderitems-0-price\">" + data.result + "</span> руб";
+                console.log(target.parentElement.parentElement);
+                console.log(foundElement);
+            },
+        });
     });
 }
