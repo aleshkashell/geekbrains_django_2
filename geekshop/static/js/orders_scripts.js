@@ -75,4 +75,8 @@ window.onload = function () {
         orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
     }
 
+    $('.order_form').on('change', 'select', function(event){
+        var target = event.target;
+        console.log(target);
+    });
 }
