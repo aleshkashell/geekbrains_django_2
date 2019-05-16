@@ -11,6 +11,7 @@ from django.db.models.signals import pre_save, pre_delete
 from django.http import JsonResponse
 
 from basketapp.models import Basket
+from mainapp.models import Product
 from ordersapp.models import Order, OrderItem
 from ordersapp.forms import OrderItemForm
 
@@ -131,7 +132,8 @@ def order_forming_complete(request, pk):
 
 
 def product_price(request, pk):
-    return JsonResponse({'result': 1000})
+    print(Product.get_item(pk))
+    return JsonResponse({'result': Product.get_item(pk).price})
 
 
 @receiver(pre_save, sender=OrderItem)
