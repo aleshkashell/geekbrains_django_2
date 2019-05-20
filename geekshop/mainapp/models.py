@@ -21,3 +21,7 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.category.name})"
+
+    @staticmethod
+    def get_item(pk):
+        return Product.objects.filter(pk=pk).first()
