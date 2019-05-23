@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'debug_toolbar',
     'social_django',
     'django.contrib.staticfiles',
     'mainapp.apps.MainappConfig',
@@ -47,6 +46,8 @@ INSTALLED_APPS = [
     'basketapp.apps.BasketappConfig',
     'adminapp.apps.AdminappConfig',
     'ordersapp.apps.OrdersappConfig',
+    'debug_toolbar',
+    'template_profiler_panel',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
@@ -144,6 +145,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
@@ -200,9 +203,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'tmp/email-messages/'
 
 if DEBUG:
-    INSTALLED_APPS.append('debug_toolbar')
-    INSTALLED_APPS.append('template_profiler_panel')
-    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    #INSTALLED_APPS.append('debug_toolbar')
+    #INSTALLED_APPS.append('template_profiler_panel')
+    #MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
     def show_toolbar(request):
         return True
