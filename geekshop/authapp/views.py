@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect
 from authapp.forms import ShopUserLoginForm
 from authapp.forms import ShopUserRegisterForm
@@ -37,6 +38,7 @@ def logout(request):
     return HttpResponseRedirect(reverse('main'))
 
 
+@login_required
 def edit(request):
     title = 'редактирование'
     if request.method == 'POST':
