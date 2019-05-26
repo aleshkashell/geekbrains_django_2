@@ -1,0 +1,13 @@
+https://django.anominus.ru/
+https://django.anominus.ru/products/
+https://django.anominus.ru/contact/
+https://django.anominus.ru/products/category/9/
+https://django.anominus.ru/products/category/10/
+https://django.anominus.ru/products/category/11/
+https://django.anominus.ru/products/category/12/
+https://django.anominus.ru/basket/
+https://django.anominus.ru/order/
+https://django.anominus.ru/auth/edit/
+https://django.anominus.ru/order/update/5/
+https://django.anominus.ru/order/update/6/
+https://django.anominus.ru/order/update/7/

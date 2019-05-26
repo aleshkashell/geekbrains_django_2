@@ -1,5 +1,6 @@
 from django import forms
 from ordersapp.models import Order, OrderItem
+from mainapp.models import Product
 
 
 class OrderForm(forms.ModelForm):
@@ -20,6 +21,7 @@ class OrderItemForm(forms.ModelForm):
         exclude = ()
 
     def __init__(self, *args, **kwargs):
-        super(OrderItemForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.get_items().select_related()
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
