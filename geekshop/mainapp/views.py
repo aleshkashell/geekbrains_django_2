@@ -34,7 +34,7 @@ def main(request):
 
 def products(request, pk=None):
     title = 'Категории'
-    categories = ProductCategory.objects.all()
+    categories = get_categories()
     hot_product = get_hot_product()
     same_products = get_same_products(hot_product)
     if pk is not None:
@@ -77,13 +77,13 @@ def product(request, pk):
     content = {
         'title': title,
         'links_menu': main_links_menu,
-        'product_links_menu': ProductCategory.objects.all(), 
+        'product_links_menu': get_categories(),
         'product': get_object_or_404(Product, pk=pk), 
     }
     
     return render(request, 'mainapp/product.html', content)
 
-def get_links_menu():
+def get_categories():
     if settings.LOW_CACHE:
         key = 'links_menu'
         links_menu = cache.get(key)
