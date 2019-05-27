@@ -1,0 +1,33 @@
+{% load staticfiles %}
+
+<h1>{{ category.name }}</h1>
+{% include 'mainapp/includes/inc_categories_menu.html' %}
+        <div class="paginator">
+          {% if products.has_previous %}
+            <a href="{% url 'products:page' category.pk products.previous_page_number %}"><</a>
+          {% endif %}
+          <span class="current">
+            страница {{ products.number }} из
+            {{ products.paginator.num_pages }}
+          </span>
+          {% if products.has_next %}
+            <a href="{% url 'products:page' category.pk products.next_page_number %}">></a>
+          {% endif %}
+        </div>
+      </div>
+<div class="catalog">
+    <div class="category-products clearfix">
+        {% for product in products %}
+            <div class="product-block">
+            <a href="{% url 'products:product' product.pk %}">
+                <img src="/media/{{ product.image }}" alt="{{ product.short_desc }}", width="100">
+                <div class="text">
+                {% comment %} <img src="{% static 'img/icon-hover.png' %}" alt="hover"> {% endcomment %}
+                <h4>{{ product.name }}</h4>
+                <p>{{ product.description }} </p>
+                </div>
+            </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>

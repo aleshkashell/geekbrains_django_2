@@ -1,6 +1,10 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.conf import settings
 from django.core.cache import cache
+from django.template.loader import render_to_string
+
 from .models import ProductCategory, Product
 from django.shortcuts import get_object_or_404
 import random
@@ -32,7 +36,7 @@ def main(request):
     return render(request, 'mainapp/index.html', content)
 
 
-def products(request, pk=None):
+def products(request, pk=None, page=1):
     title = 'Категории'
     categories = get_categories()
     hot_product = get_hot_product()
@@ -40,15 +44,25 @@ def products(request, pk=None):
     if pk is not None:
         if pk == 0:
             _products = get_products_orederd_by_price()
-            category = {'name': 'Все'}
+            category = {
+                'name': 'Все',
+                'pk': '0'
+            }
         else:
             category = get_category(pk)
             _products = get_products_in_category_orederd_by_price(pk)
+        paginator = Paginator(_products, 2)
+        try:
+            products_paginator = paginator.page(page)
+        except PageNotAnInteger:
+            products_paginator = paginator.page(1)
+        except EmptyPage:
+            products_paginator = paginator.page(paginator.num_pages)
         content = {
             'title': title,
             'links_menu': main_links_menu,
             'category': category,
-            'products': _products,
+            'products': products_paginator,
             'categories': categories,
             'same_products': same_products,
             'hot_product': hot_product,
@@ -64,6 +78,45 @@ def products(request, pk=None):
     return render(request, 'mainapp/catalog.html', content)
 
 
+def products_ajax(request, pk=None, page=1):
+    if request.is_ajax():
+        title = 'Категории'
+        categories = get_categories()
+        hot_product = get_hot_product()
+        same_products = get_same_products(hot_product)
+        if pk is not None:
+            if pk == 0:
+                _products = get_products_orederd_by_price()
+                category = {
+                    'name': 'Все',
+                    'pk': '0'
+                }
+            else:
+                category = get_category(pk)
+                _products = get_products_in_category_orederd_by_price(pk)
+            paginator = Paginator(_products, 2)
+            try:
+                products_paginator = paginator.page(page)
+            except PageNotAnInteger:
+                products_paginator = paginator.page(1)
+            except EmptyPage:
+                products_paginator = paginator.page(paginator.num_pages)
+            content = {
+                'title': title,
+                'links_menu': main_links_menu,
+                'category': category,
+                'products': products_paginator,
+                'categories': categories,
+                'same_products': same_products,
+                'hot_product': hot_product,
+            }
+            result = render_to_string(
+                'mainapp/includes/inc_products_list_content.html',
+                context=content,
+                request=request)
+            return JsonResponse({'result': result})
+
+
 def contact(request):
     title = 'Контакты'
     content = {
@@ -77,7 +130,7 @@ def product(request, pk):
     content = {
         'title': title,
         'links_menu': main_links_menu,
-        'product_links_menu': get_categories(),
+        'categories': get_categories(),
         'product': get_object_or_404(Product, pk=pk), 
     }
     
