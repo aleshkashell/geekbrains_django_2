@@ -6,22 +6,9 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ category.name }}</h1>
-{% include 'mainapp/includes/inc_categories_menu.html' %}
-<div class="catalog">
-    <div class="category-products clearfix">
-        {% for product in products %}
-            <div class="product-block">
-            <a href="{% url 'products:product' product.pk %}">
-                <img src="/media/{{ product.image }}" alt="{{ product.short_desc }}", width="100">
-                <div class="text">
-                {% comment %} <img src="{% static 'img/icon-hover.png' %}" alt="hover"> {% endcomment %}
-                <h4>{{ product.name }}</h4>
-                <p>{{ product.description }} </p>
-                </div>
-            </a>
-            </div>
-        {% endfor %}
-    </div> 
-</div>
+   <div class="details">
+       {% include 'mainapp/includes/inc_products_list_content.html' %}
+   </div>
+
+   <div class="clr"></div>
 {% endblock %}
