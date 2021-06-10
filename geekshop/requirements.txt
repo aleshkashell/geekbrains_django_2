@@ -4,7 +4,7 @@ chardet==3.0.4
 Click==7.0
 decorator==4.4.0
 defusedxml==0.6.0
-Django==2.2
+Django==2.2.24
 django-debug-toolbar==1.11
 entrypoints==0.3
 flake8==3.7.7
